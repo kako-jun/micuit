@@ -10,6 +10,10 @@ interface AnalyzeRequest {
   lastContentHash?: string; // 前回分析時のハッシュ
 }
 
+interface GenerateImageRequest {
+  prompt: string; // 夢の内容から生成したプロンプト
+}
+
 const SYSTEM_PROMPT = `あなたは夢分析の専門家です。ユーザーは寝起きで入力したため、誤字脱字や断片的な記述が多いです。
 
 以下のタスクを行ってください：
@@ -49,6 +53,10 @@ export default {
 
     if (url.pathname === "/analyze") {
       return handleAnalyze(request, env);
+    }
+
+    if (url.pathname === "/generate-image") {
+      return handleGenerateImage(request, env);
     }
 
     return new Response("Not found", { status: 404 });
@@ -109,6 +117,61 @@ async function handleAnalyze(request: Request, env: Env): Promise<Response> {
       JSON.stringify({
         error: "server_error",
         message: "サーバーエラーが発生しました",
+      }),
+      { status: 500, headers: corsHeaders }
+    );
+  }
+}
+
+async function handleGenerateImage(request: Request, env: Env): Promise<Response> {
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json",
+  };
+
+  try {
+    const body: GenerateImageRequest = await request.json();
+
+    // 夢の内容を英語の画像生成プロンプトに変換
+    const promptResponse = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+      messages: [
+        {
+          role: "system",
+          content: `You are a prompt engineer for image generation. Convert the following dream description into a concise English prompt for Stable Diffusion. Focus on visual elements: scenery, lighting, mood, colors. Output ONLY the prompt, nothing else. Keep it under 100 words. Style: dreamy, ethereal, surreal.`,
+        },
+        { role: "user", content: body.prompt },
+      ],
+      max_tokens: 150,
+    });
+
+    const imagePrompt = promptResponse.response || body.prompt;
+
+    // 画像生成
+    const imageResponse = await env.AI.run(
+      "@cf/bytedance/stable-diffusion-xl-lightning",
+      { prompt: imagePrompt }
+    );
+
+    // ArrayBufferをBase64に変換
+    const bytes = new Uint8Array(imageResponse as ArrayBuffer);
+    let binary = "";
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    const base64 = btoa(binary);
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        image: `data:image/png;base64,${base64}`,
+      }),
+      { headers: corsHeaders }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({
+        error: "image_generation_failed",
+        message: "画像生成に失敗しました",
       }),
       { status: 500, headers: corsHeaders }
     );

@@ -205,3 +205,120 @@
 .analysisContent p:last-child {
   margin-bottom: 0;
 }
+
+/* 画像セクション */
+.imagesSection {
+  margin: 0 20px 20px;
+}
+
+.imagesSectionTitle {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-weight: normal;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.imagesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.imageItem {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.imageItem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imageDeleteButton {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.imageItem:hover .imageDeleteButton {
+  opacity: 1;
+}
+
+.imageDeleteButton:hover {
+  background: rgba(200, 50, 50, 0.8);
+}
+
+.imageSource {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.imageActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.uploadButton,
+.generateButton {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.uploadButton {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.uploadButton:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.generateButton {
+  background: linear-gradient(135deg, rgba(100, 80, 180, 0.3), rgba(60, 100, 180, 0.3));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.generateButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(100, 80, 180, 0.5), rgba(60, 100, 180, 0.5));
+}
+
+.generateButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.hiddenInput {
+  display: none;
+}

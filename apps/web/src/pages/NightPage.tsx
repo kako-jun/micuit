@@ -88,9 +88,27 @@ export function NightPage() {
     )
   }
 
-  // プライミング表示: キーワードが流れ続ける
+  // プライミング表示: 画像とキーワードが流れ続ける
+  const hasImages = selectedDream.images && selectedDream.images.length > 0
+
   return (
     <div className={styles.primingContainer} onClick={() => setIsSelecting(true)}>
+      {hasImages && (
+        <div className={styles.imageSlideshow}>
+          {selectedDream.images!.map((image, i) => (
+            <img
+              key={image.id}
+              src={image.data}
+              alt=""
+              className={styles.slideshowImage}
+              style={{
+                animationDelay: `${i * 8}s`,
+                animationDuration: `${selectedDream.images!.length * 8}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
       <div className={styles.flowingKeywords}>
         {selectedDream.tokens.map((token, i) => (
           <span

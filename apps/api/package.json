@@ -1,0 +1,13 @@
+{
+  "name": "@yumicuit/api",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20251202.0",
+    "wrangler": "^4.52.1"
+  }
+}

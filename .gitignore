@@ -12,3 +12,13 @@ Thumbs.db
 .idea/
 .vscode/
 .serena/
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build
+dist/
+
+# Logs
+*.log
